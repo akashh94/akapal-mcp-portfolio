@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "akapal-mcp-portfolio"
+version = "0.1.0"
+description = "MCP server providing portfolio and brokerage data"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp",
+    "beautifulsoup4",
+    "lxml",
+    "yfinance",
+]
+
+[tool.setuptools.packages.find]
+include = ["akapal_mcp_portfolio*"]
