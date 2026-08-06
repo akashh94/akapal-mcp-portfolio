@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "MCP server providing portfolio and brokerage data"
 requires-python = ">=3.11"
 dependencies = [
-    "mcp",
+    "mcp>=1.28,<2",
     "beautifulsoup4",
     "lxml",
     "yfinance",
