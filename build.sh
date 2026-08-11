@@ -5,7 +5,7 @@ set -euo pipefail
 # Keep the checked-out branch in sync before building
 git pull
 
-export PROJECT_ID="labs-gcp-msls-16495-1782829337"
+export PROJECT_ID="adk-tut-499512"
 export REGION="us-east1"
 # Build the container image tag:
 #   ${REGION}-docker.pkg.dev/${PROJECT_ID}/<repository>/<image>:<tag>
