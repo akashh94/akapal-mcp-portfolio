@@ -1,4 +1,4 @@
-﻿"""MCP Portfolio Server â€” SSE transport.
+﻿"""MCP Portfolio Server â€” streamable HTTP transport.
 
 Provides portfolio data via MCP tools.
 Currently backed by mock data (StaticBrokerageService).
@@ -207,5 +207,5 @@ def get_concentration_analysis() -> dict:
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
-    logger.info("Starting ETrade Portfolio MCP server on port %s with SSE transport", port)
-    mcp.run(transport="sse")
+    logger.info("Starting ETrade Portfolio MCP server on port %s with streamable HTTP transport", port)
+    mcp.run(transport="streamable-http")

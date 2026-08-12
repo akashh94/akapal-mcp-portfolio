@@ -1,0 +1,169 @@
+{
+  "tools": [
+    {
+      "name": "get_account_summary",
+      "description": "Return the active account's balances and portfolio performance summary.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get Account Summary",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_portfolio_holdings",
+      "description": "Return all holdings with allocation and performance fields.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get Portfolio Holdings",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_sector_allocation",
+      "description": "Return the portfolio's allocation by sector.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get Sector Allocation",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_quote",
+      "description": "Return a current quote for the given stock symbol. Tries to fetch real-time data first; falls back to mock data when the live service is unavailable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": ["symbol"]
+      },
+      "annotations": {
+        "title": "Get Quote",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_market_summary",
+      "description": "Return market index summary data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get Market Summary",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_faq",
+      "description": "Return mock brokerage support FAQ entries, optionally filtered by text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "annotations": {
+        "title": "Get FAQ",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "search_financial_info",
+      "description": "Search broker data and public financial sources by keyword. When query mentions holdings, portfolio, or shares, returns live (mock) portfolio data. Optionally filter by source (yahoo, bloomberg, reuters, morningstar, sec).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "default": ""
+          },
+          "source": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "annotations": {
+        "title": "Search Financial Info",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "preview_order_impact",
+      "description": "Estimate a mock buy or sell order's portfolio impact without placing it. side must be BUY or SELL.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "side": {
+            "type": "string"
+          }
+        },
+        "required": ["symbol", "quantity", "side"]
+      },
+      "annotations": {
+        "title": "Preview Order Impact",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_concentration_analysis",
+      "description": "Identify positions exceeding the 15% concentration threshold.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get Concentration Analysis",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}
