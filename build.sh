@@ -2,22 +2,29 @@
 
 set -euo pipefail
 
-# Keep the checked-out branch in sync before building
-git pull
+# Resolve this project's root.
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$PROJECT_ROOT"
 
-export PROJECT_ID="adk-tut-499512"
-export REGION="us-east1"
-# Build the container image tag:
-#   ${REGION}-docker.pkg.dev/${PROJECT_ID}/<repository>/<image>:<tag>
-#   - ${REGION}-docker.pkg.dev  -> regional Artifact Registry hostname
-#   - akapal-geap-ui            -> Artifact Registry repository (created in
-#                                  the Google Cloud console)
-#   - akapal-mcp-portfolio      -> image name within that repository
-#   - $(git rev-parse --short HEAD) -> short git SHA as the version tag, so
-#                                  every build gets a unique, traceable image
-export IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/akapal-geap-ui/akapal-mcp-portfolio:$(git rev-parse --short HEAD)"
+# Office environment config (self-contained): PROJECT_ID / REGION /
+# ARTIFACT_REGISTRY all come from geap.deploy.env — the single source of
+# truth for the office deployment.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/geap.deploy.env"
 
+gcloud config set project "$PROJECT_ID"
+
+# Ensure the Artifact Registry repository exists in the deploy region.
+echo "Ensuring Artifact Registry repository '${ARTIFACT_REGISTRY}' in ${REGION}..."
+gcloud artifacts repositories describe "$ARTIFACT_REGISTRY" \
+  --location "$REGION" >/dev/null 2>&1 || {
+  echo "Repository not found; creating..."
+  gcloud artifacts repositories create "$ARTIFACT_REGISTRY" \
+    --repository-format docker \
+    --location "$REGION"
+}
+
+# Build + push the MCP server image to the office project's Artifact Registry.
+IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REGISTRY}/akapal-mcp-portfolio:$(git rev-parse --short HEAD)"
 echo "$IMAGE"
-
-# Build with the repo root as the context so Cloud Build uses the root Dockerfile
 gcloud builds submit . --tag "$IMAGE" --project "$PROJECT_ID"
