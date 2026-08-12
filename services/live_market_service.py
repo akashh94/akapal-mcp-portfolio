@@ -6,7 +6,7 @@ limit) so callers can chain to a mock or cached source.
 
 import logging
 
-from akapal_mcp_portfolio.models.quote import Quote
+from models.quote import Quote
 
 _LOGGER = logging.getLogger(__name__)
 

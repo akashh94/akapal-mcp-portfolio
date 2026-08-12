@@ -1,4 +1,4 @@
-﻿from akapal_mcp_portfolio.models.base import BaseModel
+﻿from models.base import BaseModel
 
 
 class Holding(BaseModel):

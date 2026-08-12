@@ -10,4 +10,4 @@ RUN useradd --create-home appuser
 USER appuser
 
 EXPOSE 8080
-CMD ["python", "-m", "akapal_mcp_portfolio.app"]
+CMD ["python", "-m", "app"]

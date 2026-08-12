@@ -31,12 +31,13 @@ gcloud run deploy "$SERVICE_NAME" \
 # Register the MCP server in Agent Registry so it can be discovered by agents.
 # The streamable HTTP endpoint is exposed at /mcp (FastMCP default mount path).
 # Agent Registry validates toolspec.json against the MCP Tool schema; it must
-# stay in sync with the tools declared in akapal_mcp_portfolio/app.py.
+# stay in sync with the tools declared in app.py.
+# Use an absolute path so the script works from any working directory.
 SERVICE_URL="https://${SERVICE_NAME}-${PROJECT_ID:0:6}.${REGION}.run.app"
 gcloud agent-registry services create "$SERVICE_NAME" \
     --project "$PROJECT_ID" \
     --location "$REGION" \
     --display-name="ETrade Portfolio MCP" \
     --mcp-server-spec-type=tool-spec \
-    --mcp-server-spec-content=@toolspec.json \
+    --mcp-server-spec-content=@"${PROJECT_ROOT}/toolspec.json" \
     --interfaces=url="${SERVICE_URL}/mcp",protocolBinding=jsonrpc

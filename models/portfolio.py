@@ -1,7 +1,7 @@
 ﻿from pydantic import Field
 
-from akapal_mcp_portfolio.models.base import BaseModel
-from akapal_mcp_portfolio.models.holdings import Holding
+from models.base import BaseModel
+from models.holdings import Holding
 
 
 class PortfolioSummary(BaseModel):

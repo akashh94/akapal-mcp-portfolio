@@ -34,7 +34,7 @@ pip install -e .
 Start the server:
 
 ```bash
-python -m akapal_mcp_portfolio.app
+python -m app
 ```
 
 Or via Docker:
@@ -68,7 +68,7 @@ gcloud agent-registry services create mcp-portfolio \
     --interfaces=url="https://mcp-portfolio-492310803820.us-east1.run.app/mcp",protocolBinding=jsonrpc
 ```
 
-`deploy.sh` runs this automatically after deploying to Cloud Run. Keep `toolspec.json` in sync with the tools declared in `akapal_mcp_portfolio/app.py`; it must stay under the 10KB specification limit.
+`deploy.sh` runs this automatically after deploying to Cloud Run. Keep `toolspec.json` in sync with the tools declared in `app.py`; it must stay under the 10KB specification limit.
 
 ## Tools
 
@@ -87,13 +87,12 @@ gcloud agent-registry services create mcp-portfolio \
 ## Project Structure
 
 ```
-akapal_mcp_portfolio/
 ├── app.py                     # FastMCP server, streamable HTTP transport, tool definitions
 ├── models/                    # Dataclasses for account, holdings, quote, market, etc.
-└── services/
-    ├── static_brokerage_service.py   # Mock brokerage data
-    └── live_market_service.py        # Live quotes (yfinance) with fallback
-toolspec.json                  # MCP tool specification uploaded to Agent Registry
+├── services/
+│   ├── static_brokerage_service.py   # Mock brokerage data
+│   └── live_market_service.py        # Live quotes (yfinance) with fallback
+└── toolspec.json              # MCP tool specification uploaded to Agent Registry
 ```
 
 ## Roadmap

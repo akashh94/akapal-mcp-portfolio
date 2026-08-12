@@ -10,8 +10,8 @@ import os
 
 from mcp.server.fastmcp import FastMCP
 
-from akapal_mcp_portfolio.services.live_market_service import LiveMarketService
-from akapal_mcp_portfolio.services.static_brokerage_service import StaticBrokerageService
+from services.live_market_service import LiveMarketService
+from services.static_brokerage_service import StaticBrokerageService
 
 logging.basicConfig(
     level=logging.INFO, 
