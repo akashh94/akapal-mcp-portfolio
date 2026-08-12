@@ -21,39 +21,51 @@ class LiveMarketService:
             ticker = yf.Ticker(symbol)
             info = ticker.info or {}
 
-            price = _field(info, "currentPrice", "regularMarketPrice")
+            price = _field_float(info, "currentPrice", "regularMarketPrice")
             if price is None:
                 _LOGGER.warning("yfinance returned no price for %s", symbol)
                 return None
 
             return Quote(
                 symbol=symbol,
-                company_name=_field(info, "longName", "shortName") or symbol,
+                company_name=_field_str(info, "longName", "shortName") or symbol,
                 price=price,
-                change=_field(info, "regularMarketChange") or 0.0,
-                change_percent=_field(info, "regularMarketChangePercent") or 0.0,
-                open_price=_field(info, "regularMarketOpen") or price,
-                high_price=_field(info, "regularMarketDayHigh") or price,
-                low_price=_field(info, "regularMarketDayLow") or price,
-                volume=int(_field(info, "regularMarketVolume") or 0),
-                average_volume=int(_field(info, "averageVolume") or 0),
-                market_cap=_format_market_cap(_field(info, "marketCap")),
-                pe_ratio=_field(info, "trailingPE"),
-                eps=_field(info, "trailingEps"),
-                week_52_high=_field(info, "fiftyTwoWeekHigh") or price,
-                week_52_low=_field(info, "fiftyTwoWeekLow") or price * 0.75,
-                dividend_yield=_field(info, "dividendYield", "trailingAnnualDividendYield"),
+                change=_field_float(info, "regularMarketChange") or 0.0,
+                change_percent=_field_float(info, "regularMarketChangePercent") or 0.0,
+                open_price=_field_float(info, "regularMarketOpen") or price,
+                high_price=_field_float(info, "regularMarketDayHigh") or price,
+                low_price=_field_float(info, "regularMarketDayLow") or price,
+                volume=int(_field_float(info, "regularMarketVolume") or 0),
+                average_volume=int(_field_float(info, "averageVolume") or 0),
+                market_cap=_format_market_cap(_field_float(info, "marketCap")),
+                pe_ratio=_field_float(info, "trailingPE"),
+                eps=_field_float(info, "trailingEps"),
+                week_52_high=_field_float(info, "fiftyTwoWeekHigh") or price,
+                week_52_low=_field_float(info, "fiftyTwoWeekLow") or price * 0.75,
+                dividend_yield=_field_float(info, "dividendYield", "trailingAnnualDividendYield"),
             )
         except Exception:
             _LOGGER.warning("Failed to fetch live quote for %s", symbol, exc_info=True)
             return None
 
 
-def _field(info: dict, *keys: str) -> float | str | None:
-    """Return the first non-None value for *keys* from *info*."""
+def _field_float(info: dict, *keys: str) -> float | None:
+    """Return the first numeric value for *keys* from *info*, or ``None``."""
     for k in keys:
         v = info.get(k)
         if v is not None:
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                continue
+    return None
+
+
+def _field_str(info: dict, *keys: str) -> str | None:
+    """Return the first string value for *keys* from *info*, or ``None``."""
+    for k in keys:
+        v = info.get(k)
+        if isinstance(v, str):
             return v
     return None
 
