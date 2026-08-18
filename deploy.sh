@@ -14,9 +14,9 @@ source "$SCRIPT_DIR/geap.deploy.env"
 
 IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REGISTRY}/akapal-mcp-portfolio:$(git rev-parse --short HEAD)"
 
-# Deploy the MCP server as ${SERVICE_NAME} on Cloud Run. The MCP SSE URL
-# becomes https://${SERVICE_NAME}-<hash>.${REGION}.run.app/sse, which the
-# agent's MCP_PORTFOLIO_URL must point at. No extra env vars needed: Cloud
+# Deploy the MCP server as ${SERVICE_NAME} on Cloud Run. The Streamable HTTP
+# endpoint becomes https://${SERVICE_NAME}-<hash>.${REGION}.run.app/mcp, which
+# the agent's MCP_PORTFOLIO_URL must point at. No extra env vars needed: Cloud
 # Run injects PORT and the app binds 0.0.0.0.
 gcloud run deploy "$SERVICE_NAME" \
     --image "$IMAGE" \
