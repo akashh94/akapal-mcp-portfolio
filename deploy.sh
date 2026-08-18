@@ -28,16 +28,25 @@ gcloud run deploy "$SERVICE_NAME" \
     --min-instances 1 \
     --max-instances 1
 
-# Register the MCP server in Agent Registry so it can be discovered by agents.
-# The streamable HTTP endpoint is exposed at /mcp (FastMCP default mount path).
-# Agent Registry validates toolspec.json against the MCP Tool schema; it must
-# stay in sync with the tools declared in app.py.
-# Use an absolute path so the script works from any working directory.
-SERVICE_URL="https://${SERVICE_NAME}-${PROJECT_ID:0:6}.${REGION}.run.app"
-gcloud agent-registry services create "$SERVICE_NAME" \
-    --project "$PROJECT_ID" \
-    --location "$REGION" \
-    --display-name="ETrade Portfolio MCP" \
-    --mcp-server-spec-type=tool-spec \
-    --mcp-server-spec-content=@"${PROJECT_ROOT}/toolspec.json" \
-    --interfaces=url="${SERVICE_URL}/mcp",protocolBinding=jsonrpc
+# Register or update the MCP server in Agent Registry.
+SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" --project "$PROJECT_ID" --region "$REGION" --format="value(status.url)")
+
+if gcloud agent-registry services describe "$SERVICE_NAME" --project "$PROJECT_ID" --location "$REGION" >/dev/null 2>&1; then
+    echo "Updating existing Agent Registry service..."
+    gcloud agent-registry services update "$SERVICE_NAME" \
+        --project "$PROJECT_ID" \
+        --location "$REGION" \
+        --display-name="ETrade Portfolio MCP" \
+        --mcp-server-spec-type=tool-spec \
+        --mcp-server-spec-content="$(cat "${PROJECT_ROOT}/toolspec.json")" \
+        --interfaces=url="${SERVICE_URL}/mcp",protocolBinding=jsonrpc
+else
+    echo "Creating new Agent Registry service..."
+    gcloud agent-registry services create "$SERVICE_NAME" \
+        --project "$PROJECT_ID" \
+        --location "$REGION" \
+        --display-name="ETrade Portfolio MCP" \
+        --mcp-server-spec-type=tool-spec \
+        --mcp-server-spec-content="$(cat "${PROJECT_ROOT}/toolspec.json")" \
+        --interfaces=url="${SERVICE_URL}/mcp",protocolBinding=jsonrpc
+fi
