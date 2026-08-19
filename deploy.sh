@@ -26,7 +26,8 @@ gcloud run deploy "$SERVICE_NAME" \
     --allow-unauthenticated \
     --port 8080 \
     --min-instances 1 \
-    --max-instances 1
+    --max-instances 1 \
+    --timeout=900
 
 # Register or update the MCP server in Agent Registry.
 SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" --project "$PROJECT_ID" --region "$REGION" --format="value(status.url)")
